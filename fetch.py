@@ -12,11 +12,18 @@ import re
 import requests
 import time
 
+from requests import ConnectionError
+
+s = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=s)
+
+
 def fetch_website_links(account_name="1999.near"):
-    s = Service(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=s)
     driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
 
+    # When one try to beautify the script, some functionality changes. Make sure you test the
+    # functionality with pytest or manual testing that it doesn't change if you plan to beautify
+    # the script below.
     script = """
 var x = document.querySelectorAll("a");
 var myarray = []
@@ -32,8 +39,7 @@ function make_table() {
             table += '<tr><td>'+ myarray[i][0] + '</td><td>'+myarray[i][1]+'</td></tr>';
     };
  
-    var w = window.open("");
-w.document.write(table); 
+    
 return myarray
 }
 return make_table()
@@ -57,9 +63,13 @@ def fetch_explorer_actions(link):
 
     href = requests.get(link)
 
+    if not href.ok: raise ConnectionError("Unable to reach the website. Please try again later.")
+
     start = re.search('Actions', href.text).span()[0]
     end = re.search('Transaction Execution Plan', href.text).span()[0]
 
     return href.text[start:end]
 
 
+def close_driver_at_end():
+    driver.close()

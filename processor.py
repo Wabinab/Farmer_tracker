@@ -19,7 +19,7 @@ def preprocess_fetch_all_transactions(TwoD_list):
     return newlist
 
 
-def preprocess_fetch_all_names(TwoD_list):  #TODO: Test this function.
+def preprocess_fetch_all_names(TwoD_list):
     """
     Take output from fetch_website_links and pass here to be preprocessed, for all names.
     This assumes that with names, it means transaction happens.

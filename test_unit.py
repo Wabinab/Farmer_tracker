@@ -1,20 +1,15 @@
 """
-Test for fetch
+Unit tests.
+
+NOTE:
+    If tests fails with `AttributeError: 'NoneType' object has no attribute 'span'`,
+    MOST PROBABLY the website is not reachable at the moment. Try again.
 """
 import re
 
 from fetch import *
 from processor import *
 import pytest
-
-# from multiprocessing.pool import ThreadPool
-#
-# thread_pool = ThreadPool(processes=2)
-#
-# # links = thread_pool.apply_async(fetch_website_links, ['wabinab.near']).get()
-# # fake_links = thread_pool.apply_async(fetch_website_links, ['not_even_true']).get()
-#
-# links, fake_links = thread_pool.apply_async(fetch_website_links, [['wabinab.near'], ['not_even_true']]).get()
 
 links = fetch_website_links('wabinab.near')
 fake_links = fetch_website_links('not_even_true')  # don't even have .near
@@ -77,3 +72,10 @@ def test_fetch_explorer_with_functions_cannot_read_is_expected():
     action_output = fetch_explorer_actions(link)
 
     assert postprocess_transaction_actions(action_output) == None
+
+
+@pytest.fixture(scope='session')
+def close_browser_teardown():
+    close_driver_at_end()
+
+def test_dummy_final_to_teardown(close_browser_teardown): pass
