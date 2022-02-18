@@ -6,6 +6,19 @@ Created on: 18 February 2022.
 import re
 
 
+def preprocess_fetch_all_transactions(TwoD_list):
+    """
+    Take output from fetch_website_links and pass here to be preprocessed, for all transaction links.
+    :param TwoD_list:
+    :return:
+    """
+    flattened = [item for sublist in TwoD_list for item in sublist]
+    r = re.compile('https://explorer.mainnet.near.org/transactions/')
+    newlist = list(filter(r.match, flattened))
+
+    return newlist
+
+
 def postprocess_transaction_actions(action_text: str):
     """
     Given action text from NEAR explorer, return the transaction amount.
