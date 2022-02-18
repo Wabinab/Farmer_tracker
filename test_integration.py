@@ -44,6 +44,25 @@ def test_fetch_explorer_contains_action():
     assert re.search('Actions', fetch_explorer_actions(link))
 
 
+def test_preprocess_fetch_all_names_with_dummy_as_expected():
+    transactions = [
+        ['@aurora.poolv1.near', 'withdraw'],
+        ['@aurora.poolv1.near', 'stake'],
+        ['@another_account.near', 'another account'],
+        ['EXoAkSBTEntbFgQGx625BgnsfRGgeoMA4iPZbMTEdT4t', 'some random transaction http link here'],
+        ['@ref-finance.near', 'swap'],
+        ['@wrap.near', 'unwrap'],
+        ['@11244002550bdff129591faabb10e811d910d3f57e0abdc50a5e7dd46b3938ba', 'from Binance'],
+        ['@ethan_is_cool.near', 'initial transfer']
+    ]
+
+    expected = ['another_account.near',
+                '11244002550bdff129591faabb10e811d910d3f57e0abdc50a5e7dd46b3938ba',
+                'ethan_is_cool.near']
+
+    assert preprocess_fetch_all_names(transactions) == expected
+
+
 def test_fetch_explorer_money_is_correct():
     link = 'https://explorer.mainnet.near.org/transactions/GYPqg5necteQupaJ3kP1WjkwbGfgM4M6X1vik9LWiVeG'
 
