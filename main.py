@@ -5,6 +5,7 @@ Created on 18 February 2022.
 import time
 
 from all import *
+import argparse
 import yaml
 
 
@@ -43,12 +44,26 @@ def total_pipeline(list_of_account_names: (list, set)):
 
 
 if __name__ == '__main__':
-    list_of_account_names = "read from text file"
-    total_pipeline(list_of_account_names)
+    # parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument('account_file', type=str, help='where all account name located, txt file',
+                        default='all_accounts.txt')
+
+    args = parser.parse_args()
+
+    with open(args.account_file, 'r') as f:
+        list_of_account_names = f.readlines()
+
+    farmers, whitelisted = total_pipeline(list_of_account_names)
 
     # save to yaml file farmers
+    with open('current_blacklisted.yaml', "w") as f:
+        yaml.dump(farmers, f)
 
-
+    # whitelisted
+    whitelisted = [f"{name}\n" for name in whitelisted]  # add \n to all.
+    with open('current_whitelisted.txt', 'w') as f:
+        f.writelines(whitelisted)
 
 
 input("Press anything to exit...")

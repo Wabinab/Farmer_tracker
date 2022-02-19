@@ -25,7 +25,7 @@ def test_finding_farmers_work():
 
     more_occurrences, total = postprocess_counting_total_occurrences_larger_than_once(list_of_acc_output)
 
-    farmers = finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
+    farmers, whitelist = finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
 
     # expected = {
     #     'elon_musk_is.near': 2,
@@ -35,4 +35,8 @@ def test_finding_farmers_work():
     assert 'elon_musk_is.near' in farmers
     assert 'elon_musk_loves.near' in farmers
     assert 'wabinab.near' not in farmers
+
+    assert 'wabinab.near' in whitelist
+    assert 'elon_musk_loves.near' not in whitelist
+    assert 'elon_musk_is.near' not in whitelist
 

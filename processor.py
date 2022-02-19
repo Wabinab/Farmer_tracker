@@ -106,13 +106,15 @@ def finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, t
     """
 
     potential_farmers = dict()
+    whitelist = set()
 
     # Check if account appear in more_occurrences.
     for name, acc in zip(corresponding_names, list_of_acc_output):
         farmers = more_occurrences.intersection(acc)
 
-        if len(farmers) == 0: continue  # not farmer, skip.
+        if len(farmers) == 0:
+            whitelist.add(name)
         else:
             potential_farmers[name] = len(farmers)
 
-    return potential_farmers
+    return potential_farmers, whitelist
