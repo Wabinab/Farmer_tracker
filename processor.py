@@ -115,6 +115,6 @@ def finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, t
         if len(farmers) == 0:
             whitelist.add(name)
         else:
-            potential_farmers[name] = len(farmers)
+            potential_farmers[name] = list(farmers)
 
     return potential_farmers, whitelist

@@ -19,7 +19,7 @@ def pipeline_fetch_data_into_set(account_name):
         account = preprocess_fetch_all_names(account)
 
     if len(account) == 0:  # if still zero, fails.
-        print("Cannot find any transfer. Manual checking required")
+        print(f"Cannot find any transfer. Manual checking required: {account_name}")
     return name, account
 
 
@@ -44,7 +44,6 @@ def total_pipeline(list_of_account_names: (list, set)):
 
 
 if __name__ == '__main__':
-    # parser
     parser = argparse.ArgumentParser()
     parser.add_argument('account_file', type=str, help='where all account name located, txt file',
                         default='all_accounts.txt')
@@ -53,6 +52,9 @@ if __name__ == '__main__':
 
     with open(args.account_file, 'r') as f:
         list_of_account_names = f.readlines()
+
+    # new fix, not tested yet.
+    list_of_account_names = [name.strip() for name in list_of_account_names]
 
     farmers, whitelisted = total_pipeline(list_of_account_names)
 
@@ -66,5 +68,5 @@ if __name__ == '__main__':
         f.writelines(whitelisted)
 
 
-input("Press anything to exit...")
+# input("Press anything to exit...")
 close_driver_at_end()

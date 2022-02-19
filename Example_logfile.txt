@@ -1,0 +1,53 @@
+# Example Logfile
+
+This is an example logfile. Based on this log, some update have been updated. Example, previously we answer
+"Cannot find any transfer. Manual checking required" for DDOS attack prevention from site that causes it.
+However, one now changes it to include the account name so you can come back later to deal with it.
+
+**Though, these fails one we haven't implement adding them to list automatically yet**.
+
+Some other logs are from Selenium, which doesn't make much sense but you can ignore it as long as the website
+works well.
+
+```console
+====== WebDriver manager ======
+Could not get version for google-chrome with the command:  powershell "$ErrorActionPreference='silentlycontinue' ; (Get-Item -Path "$env:PROGRAMFILES\Googl
+e\Chrome\Application\chrome.exe").VersionInfo.FileVersion ; if (-not $? -or $? -match $error) { (Get-Item -Path "$env:PROGRAMFILES(x86)\Google\Chrome\Appli
+cation\chrome.exe").VersionInfo.FileVersion } if (-not $? -or $? -match $error) { (Get-Item -Path "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe")
+.VersionInfo.FileVersion } if (-not $? -or $? -match $error) { reg query "HKCU\SOFTWARE\Google\Chrome\BLBeacon" /v version } if (-not $? -or $? -match $err
+or) { reg query "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Google Chrome" /v version }"
+Current google-chrome version is UNKNOWN
+Get LATEST chromedriver version for UNKNOWN google-chrome
+Trying to download new driver from https://chromedriver.storage.googleapis.com/98.0.4758.102/chromedriver_win32.zip
+Driver has been saved in cache [C:\Users\Wabinab\.wdm\drivers\chromedriver\win32\98.0.4758.102]
+
+DevTools listening on ws://127.0.0.1:50319/devtools/browser/0ca416e2-2ec2-427c-8ac7-8bc62b7d2ac2
+[7336:17676:0219/123508.219:ERROR:chrome_browser_main_extra_parts_metrics.cc(227)] START: ReportBluetoothAvailability(). If you don't see the END: message,
+ this is crbug.com/1216328.
+[7336:17676:0219/123508.222:ERROR:chrome_browser_main_extra_parts_metrics.cc(230)] END: ReportBluetoothAvailability()
+[7336:17676:0219/123508.223:ERROR:chrome_browser_main_extra_parts_metrics.cc(235)] START: GetDefaultBrowser(). If you don't see the END: message, this is c
+rbug.com/1216328.
+[7336:8316:0219/123508.238:ERROR:device_event_log_impl.cc(214)] [12:35:08.238] Bluetooth: bluetooth_adapter_winrt.cc:1075 Getting Default Adapter failed.
+[7336:17676:0219/123508.273:ERROR:chrome_browser_main_extra_parts_metrics.cc(239)] END: GetDefaultBrowser()
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+[14228:1828:0219/123625.999:ERROR:gpu_init.cc(454)] Passthrough is not supported, GL is disabled, ANGLE is
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Cannot find any transfer. Manual checking required
+Press anything to exit...
+```
