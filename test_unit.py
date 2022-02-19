@@ -11,8 +11,13 @@ from fetch import *
 from processor import *
 import pytest
 
-links = fetch_website_links('wabinab.near')
-fake_links = fetch_website_links('not_even_true')  # don't even have .near
+name1, links = fetch_website_links('wabinab.near')
+name2, fake_links = fetch_website_links('not_even_true')  # don't even have .near
+
+
+def test_names_correct():
+    assert name1 == "wabinab.near"
+    assert name2 == "not_even_true"
 
 
 def test_fetch_works_with_expected_data():
@@ -42,6 +47,7 @@ def test_fetch_explorer_contains_action():
 def test_preprocess_fetch_all_names_with_dummy_as_expected():
     transactions = [
         ['@aurora.poolv1.near', 'withdraw'],
+        ['@berryclub.ek.near', 'berryclub contract'],
         ['@aurora.poolv1.near', 'stake'],
         ['@another_account.near', 'another account'],
         ['EXoAkSBTEntbFgQGx625BgnsfRGgeoMA4iPZbMTEdT4t', 'some random transaction http link here'],
@@ -51,11 +57,14 @@ def test_preprocess_fetch_all_names_with_dummy_as_expected():
         ['@ethan_is_cool.near', 'initial transfer']
     ]
 
-    expected = ['another_account.near',
+    expected = {'another_account.near',
                 '11244002550bdff129591faabb10e811d910d3f57e0abdc50a5e7dd46b3938ba',
-                'ethan_is_cool.near']
+                'ethan_is_cool.near'}
 
-    assert preprocess_fetch_all_names(transactions) == expected
+    our_set = preprocess_fetch_all_names(transactions)
+
+    # assert preprocess_fetch_all_names(transactions) == expected
+    assert len(our_set.difference(expected)) == 0
 
 
 def test_fetch_explorer_money_is_correct():
@@ -72,6 +81,27 @@ def test_fetch_explorer_with_functions_cannot_read_is_expected():
     action_output = fetch_explorer_actions(link)
 
     assert postprocess_transaction_actions(action_output) == None
+
+
+def test_counting_all_occurrences_working_correctly():
+    acc1 = {'abc.near', 'def.near'}
+    acc2 = {'abc.near', 'efg.near'}
+    acc3 = {'efg.near', 'hij.near'}
+
+    more_occurrences, total = postprocess_counting_total_occurrences_larger_than_once([acc1, acc2, acc3])
+
+    expected = {'abc.near', 'efg.near'}
+
+    total_expected = Counter({
+        'abc.near': 2,
+        'def.near': 1,
+        'efg.near': 2,
+        'hij.near': 1
+    })
+
+    assert len(more_occurrences.difference(expected)) == 0
+    assert total == total_expected
+
 
 
 @pytest.fixture(scope='session')

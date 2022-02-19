@@ -18,8 +18,9 @@ s = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=s)
 
 
-def fetch_website_links(account_name="1999.near"):
-    driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
+def fetch_website_links(account_name="1999.near", read_again=False):
+    if not read_again:
+        driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
 
     # When one try to beautify the script, some functionality changes. Make sure you test the
     # functionality with pytest or manual testing that it doesn't change if you plan to beautify
@@ -47,7 +48,7 @@ return make_table()
 
     time.sleep(3)  #TODO: might need to change how this works?
 
-    return driver.execute_script(script)
+    return account_name, driver.execute_script(script)
 
 
 def fetch_explorer_actions(link):
