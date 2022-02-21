@@ -22,6 +22,15 @@ def fetch_website_links(account_name="1999.near", read_again=False):
     if not read_again:
         driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
 
+        type_button = driver.find_element(by="id", value="headlessui-listbox-button-9")
+        type_button.click()
+
+        # Now combobox (i.e. dropdown) is open, select the correct element and click on it.
+        combobox_dropdown = driver.find_element(by="id", value="headlessui-listbox-options-10")
+
+        combobox_dropdown.find_element(by="xpath", value="//*[text()='Transfer']").click()
+
+
     # When one try to beautify the script, some functionality changes. Make sure you test the
     # functionality with pytest or manual testing that it doesn't change if you plan to beautify
     # the script below.

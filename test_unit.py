@@ -22,7 +22,7 @@ def test_names_correct():
 
 def test_fetch_works_with_expected_data():
     flattened = [item for sublist in links for item in sublist]
-    assert 'EXoAkSBTEntbFgQGx625BgnsfRGgeoMA4iPZbMTEdT4t' in flattened, "webpage not fully loaded"  # random hash.
+    assert 'FfWhM85wJDW2YgKf7jtG1RGz9vAyLm9UucYSL6UYRDBw' in flattened, "webpage not fully loaded"  # random hash.
 
 
 def test_all_contains_word_transaction_in_output():

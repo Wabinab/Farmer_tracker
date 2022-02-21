@@ -6,7 +6,11 @@ import time
 
 from all import *
 import argparse
+import logging
+import pickle
 import yaml
+
+logging.basicConfig(filename="output/logs.txt", level=logging.INFO)
 
 
 def pipeline_fetch_data_into_set(account_name):
@@ -14,12 +18,14 @@ def pipeline_fetch_data_into_set(account_name):
     account = preprocess_fetch_all_names(account)
 
     if len(account) == 0:  # try again just in case website haven't finish loading.
-        time.sleep(3)
+        time.sleep(5)
         name, account = fetch_website_links(account_name, read_again=True)
         account = preprocess_fetch_all_names(account)
 
     if len(account) == 0:  # if still zero, fails.
-        print(f"Cannot find any transfer. Manual checking required: {account_name}")
+        printout = f"Cannot find any transfer. Manual checking required: {account_name}"
+        print(printout)
+        logging.info(printout)
     return name, account
 
 
@@ -40,6 +46,10 @@ def total_pipeline(list_of_account_names: (list, set)):
 
     more_occurrences, total = postprocess_counting_total_occurrences_larger_than_once(list_of_acc_output)
 
+    # save more_occurrences
+    with open('output/total_count.pkl', 'wb') as f:
+        pickle.dump(total, f)
+
     return finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
 
 
@@ -59,12 +69,12 @@ if __name__ == '__main__':
     farmers, whitelisted = total_pipeline(list_of_account_names)
 
     # save to yaml file farmers
-    with open('current_blacklisted.yaml', "w") as f:
+    with open('output/current_blacklisted.yaml', "w") as f:
         yaml.dump(farmers, f)
 
     # whitelisted
     whitelisted = [f"{name}\n" for name in whitelisted]  # add \n to all.
-    with open('current_whitelisted.txt', 'w') as f:
+    with open('output/current_whitelisted.txt', 'w') as f:
         f.writelines(whitelisted)
 
 
