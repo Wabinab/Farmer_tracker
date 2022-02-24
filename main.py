@@ -8,7 +8,9 @@ from all import *
 import argparse
 import logging
 import pickle
+import json
 import yaml
+from pyhelpers.store import save_pickle, load_pickle
 
 logging.basicConfig(filename="output/logs.txt", level=logging.INFO)
 
@@ -33,6 +35,13 @@ def total_pipeline(list_of_account_names: (list, set)):
     """
     Pass in the list of account names as a list or set, go through them.
 
+    Some current farmers, we'll assume they're parents to some of the whitelisted, and check for more
+    interactions. Reason we find farmer first because normal non-farmers are allowed to interact with
+    non-farmers as well, so this might be less accurate. This way, we can give a higher confidence to
+    the output from this pipeline.
+
+    HOWEVER WE STILL CAN'T DENY THAT THEY MAY NOT ALL BE FARMERS.
+
     :param list_of_account_names:
     :return: Potential farmers with their ratings. Ratings are counts of occurrences.
     """
@@ -50,7 +59,27 @@ def total_pipeline(list_of_account_names: (list, set)):
     with open('output/total_count.pkl', 'wb') as f:
         pickle.dump(total, f)
 
-    return finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
+    farmers, whitelisted, perhaps_farmers = finding_farmers(
+        corresponding_names, list_of_acc_output, more_occurrences, total)
+
+    curr_farmers = set(farmers.keys())
+    potential_farmers = dict()
+
+    dict_name_to_transaction = {k: v for k, v in zip(corresponding_names, list_of_acc_output)}
+
+    save_pickle(dict_name_to_transaction, 'output/transaction_list.pkl')
+
+    for whitelisted_acc in whitelisted.copy():
+        compare_to = dict_name_to_transaction.get(whitelisted_acc)
+        is_farmer = curr_farmers.intersection(compare_to)
+
+        if len(is_farmer) >= 1:
+            potential_farmers[whitelisted_acc] = list(is_farmer)  # not length here.
+            whitelisted.remove(whitelisted_acc)
+
+    return farmers, whitelisted, potential_farmers, perhaps_farmers
+
+
 
 
 if __name__ == '__main__':
@@ -66,11 +95,17 @@ if __name__ == '__main__':
     # new fix, not tested yet.
     list_of_account_names = [name.strip() for name in list_of_account_names]
 
-    farmers, whitelisted = total_pipeline(list_of_account_names)
+    farmers, whitelisted, potential_farmers, perhaps_farmers = total_pipeline(list_of_account_names)
 
     # save to yaml file farmers
     with open('output/current_blacklisted.yaml', "w") as f:
         yaml.dump(farmers, f)
+
+    with open('output/potential_farmers.json', 'w') as f:
+        json.dump(potential_farmers, f, indent=4)
+
+    with open('output/perhaps_farmers.yaml', "w") as f:
+        yaml.dump(perhaps_farmers, f)
 
     # whitelisted
     whitelisted = [f"{name}\n" for name in whitelisted]  # add \n to all.

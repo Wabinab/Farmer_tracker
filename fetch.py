@@ -18,18 +18,20 @@ s = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=s)
 
 
+def get_to_page(account_name):
+    driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
+
+    type_button = driver.find_element(by="id", value="headlessui-listbox-button-9")
+    type_button.click()
+
+    # Now combobox (i.e. dropdown) is open, select the correct element and click on it.
+    combobox_dropdown = driver.find_element(by="id", value="headlessui-listbox-options-10")
+
+    combobox_dropdown.find_element(by="xpath", value="//*[text()='Transfer']").click()
+
+
 def fetch_website_links(account_name="1999.near", read_again=False):
-    if not read_again:
-        driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
-
-        type_button = driver.find_element(by="id", value="headlessui-listbox-button-9")
-        type_button.click()
-
-        # Now combobox (i.e. dropdown) is open, select the correct element and click on it.
-        combobox_dropdown = driver.find_element(by="id", value="headlessui-listbox-options-10")
-
-        combobox_dropdown.find_element(by="xpath", value="//*[text()='Transfer']").click()
-
+    if not read_again: get_to_page(account_name)
 
     # When one try to beautify the script, some functionality changes. Make sure you test the
     # functionality with pytest or manual testing that it doesn't change if you plan to beautify
@@ -79,6 +81,31 @@ def fetch_explorer_actions(link):
     end = re.search('Transaction Execution Plan', href.text).span()[0]
 
     return href.text[start:end]
+
+
+def fetch_past_transactions(account_name):
+    """
+    Get the past transactions of this account, and at what time it is.
+    """
+    get_to_page(account_name)
+
+    elements = driver.find_elements(by='xpath', value="//*[@class='flex-grow flex flex-wrap items-center']")
+    transfer_amounts = []
+
+    for element in elements:
+        # We only want second item of list
+        transfer_value = element.text.split('\n')[1]
+
+        # float on negative numbers failed, perhaps sign isn't really 'negative' hence failure conversion.
+        try:
+            value = float(transfer_value)
+        except ValueError:
+            value = float('-' + transfer_value[1:].strip())
+
+        transfer_amounts.append(value)
+
+    return transfer_amounts
+
 
 
 def close_driver_at_end():

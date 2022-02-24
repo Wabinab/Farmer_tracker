@@ -14,7 +14,7 @@ def pipeline_fetch_data(acc_name):
 
 
 def test_finding_farmers_work():
-    input_names = ['wabinab.near', 'elon_musk_is.near', 'elon_musk_loves.near']
+    input_names = ['wabinab.near', 'elon_musk_is.near', 'elon_musk_loves.near', 'grandalex.near']
     corresponding_names = []
     list_of_acc_output = []
 
@@ -25,7 +25,7 @@ def test_finding_farmers_work():
 
     more_occurrences, total = postprocess_counting_total_occurrences_larger_than_once(list_of_acc_output)
 
-    farmers, whitelist = finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
+    farmers, whitelist, perhaps_farmers = finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, total)
 
     # expected = {
     #     'elon_musk_is.near': 2,
@@ -39,4 +39,13 @@ def test_finding_farmers_work():
     assert 'wabinab.near' in whitelist
     assert 'elon_musk_loves.near' not in whitelist
     assert 'elon_musk_is.near' not in whitelist
+
+    assert 'grandalex.near' in perhaps_farmers
+    assert len(perhaps_farmers.keys()) == 1
+
+
+pytest.mark.skip("WIP")
+def test_finding_potential_farmers_work():
+    # use malaysia88.near and singapore88.near to deal with this.
+    pass
 

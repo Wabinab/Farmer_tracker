@@ -6,6 +6,12 @@ Created on: 18 February 2022.
 import re
 from collections import Counter
 
+UNCERTAIN_LIST = {
+    '0d584a4cbbfd9a4878d816512894e65918e54fae13df39a6f520fc90caea2fb0',
+    '601483a1b22699b636f1df800b9b709466eba4e1d5ce7c2e1e20317af8bbd1f3',  # check grandalex.near
+    '11244002550bdff129591faabb10e811d910d3f57e0abdc50a5e7dd46b3938ba',
+}
+
 
 def preprocess_fetch_all_transactions(TwoD_list):
     """
@@ -26,6 +32,8 @@ def preprocess_fetch_all_names(TwoD_list):
     This assumes that with names, it means transaction happens.
     Automatically removes those that one thought are popular. Note that this DOES NOT REMOVE
     EVERYTHING THAT ARE POPULAR.
+
+    Includes itself as a possibility.
     :param TwoD_list:
     :return:
     """
@@ -40,7 +48,8 @@ def preprocess_fetch_all_names(TwoD_list):
     popular_list = {
         'ref-finance.near',
         'wrap.near',
-        'learn.near'
+        'learn.near',
+        '7747991786f445efb658b69857eadc7a57b6b475beec26ed14da8bc35bb2b5b6',
     }
 
     # Remove those in popular_list
@@ -93,6 +102,10 @@ def postprocess_counting_total_occurrences_larger_than_once(list_of_acc_output):
 
     more_occurrences = {k for k, v in total.items() if v > 1}
 
+    # remove uncertain from more_occurrences
+    for element in UNCERTAIN_LIST:
+        more_occurrences.discard(element)
+
     return more_occurrences, total
 
 
@@ -107,15 +120,27 @@ def finding_farmers(corresponding_names, list_of_acc_output, more_occurrences, t
     """
 
     potential_farmers = dict()
+    perhaps_farmers = dict()
     whitelist = set()
 
     # Check if account appear in more_occurrences.
     for name, acc in zip(corresponding_names, list_of_acc_output):
         farmers = more_occurrences.intersection(acc)
 
-        if len(farmers) == 0:
-            whitelist.add(name)
-        else:
-            potential_farmers[name] = len(farmers)
+        secondary_farmers = UNCERTAIN_LIST.intersection(acc)
 
-    return potential_farmers, whitelist
+        if   len(farmers)           > 0: potential_farmers[name] = len(farmers)
+        elif len(secondary_farmers) > 0: perhaps_farmers[name]   = len(secondary_farmers)
+        else                           : whitelist.add(name)
+
+    return potential_farmers, whitelist, perhaps_farmers
+
+
+def transaction_counter(list_of_amounts: list):
+    """
+    Output of fetch_past_transactions goes here. We count the rounded-off values to 1st decimal place.
+    :param list_of_amounts:
+    :return:
+    """
+    # Round them to 1dp and count them.
+    return Counter([round(num, 1) for num in list_of_amounts])
