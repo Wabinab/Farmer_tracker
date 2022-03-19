@@ -20,6 +20,7 @@ def pipeline_fetch_data_into_set(account_name):
     account = preprocess_fetch_all_names(account)
 
     if len(account) == 0:  # try again just in case website haven't finish loading.
+        print("Goes into refresh")
         time.sleep(5)
         name, account = fetch_website_links(account_name, read_again=True)
         account = preprocess_fetch_all_names(account)

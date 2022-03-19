@@ -6,6 +6,7 @@ Created on 18 February 2022.
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 
 import re
@@ -20,13 +21,17 @@ driver = webdriver.Chrome(service=s)
 
 def get_to_page(account_name):
     driver.get(f"https://stats.gallery/mainnet/{account_name}/transactions?t=all")
+    time.sleep(0.25)
 
-    type_button = driver.find_element(by="id", value="headlessui-listbox-button-9")
+    type_dir = driver.find_element(By.CLASS_NAME, "w-48")  # still hardcoded.
+
+    type_button = type_dir.find_element(By.TAG_NAME, "button")
     type_button.click()
 
     # Now combobox (i.e. dropdown) is open, select the correct element and click on it.
-    combobox_dropdown = driver.find_element(by="id", value="headlessui-listbox-options-10")
+    # combobox_dropdown = driver.find_element(by="id", value="headlessui-listbox-options-25")
 
+    combobox_dropdown = type_dir.find_element(By.TAG_NAME, "ul")
     combobox_dropdown.find_element(by="xpath", value="//*[text()='Transfer']").click()
 
 

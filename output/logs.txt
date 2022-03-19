@@ -78,3 +78,13 @@ INFO:root:Cannot find any transfer. Manual checking required: kandy.near
 INFO:root:Cannot find any transfer. Manual checking required: sakura2021.near
 INFO:root:Cannot find any transfer. Manual checking required: thiendq.near
 INFO:root:Cannot find any transfer. Manual checking required: havannam.near
+INFO:root:Cannot find any transfer. Manual checking required: littlepig.near
+INFO:root:Cannot find any transfer. Manual checking required: littlepig.near
+INFO:root:Cannot find any transfer. Manual checking required: thanh951.near
+INFO:root:Cannot find any transfer. Manual checking required: dinhxhung.near
+INFO:root:Cannot find any transfer. Manual checking required: medica.near
+INFO:root:Cannot find any transfer. Manual checking required: jasonanger.near
+INFO:root:Cannot find any transfer. Manual checking required: stephenmai88.near
+INFO:root:Cannot find any transfer. Manual checking required: diana_rose.near
+INFO:root:Cannot find any transfer. Manual checking required: jukido.near
+INFO:root:Cannot find any transfer. Manual checking required: littlepig.near
